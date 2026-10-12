@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Fake News Detection System</title>
+
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+    <style>
+        body {
+            margin: 0;
+            font-family: 'Inter', sans-serif;
+            color: #111827;
+            min-height: 100vh;
+
+            /* 🌈 MODERN AI GRADIENT BACKGROUND */
+            background: linear-gradient(
+                135deg,
+                #0f172a 0%,
+                #1e3a8a 20%,
+                #6366f1 45%,
+                #a5b4fc 70%,
+                #eef2ff 100%
+            );
+
+            overflow-x: hidden;
+        }
+
+        /* ✨ DOT PATTERN OVERLAY */
+        body::before {
+            content: "";
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+
+            background-image: radial-gradient(
+                rgba(255,255,255,0.08) 1px,
+                transparent 1px
+            );
+
+            background-size: 22px 22px;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        /* NAVBAR */
+        .navbar {
+            background: rgba(15, 23, 42, 0.85);
+            backdrop-filter: blur(10px);
+            color: white;
+            padding: 18px 30px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .logo-box {
+            width: 38px;
+            height: 38px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .title {
+            font-size: 18px;
+            font-weight: 600;
+        }
+
+        /* MAIN CONTAINER */
+        .container {
+            width: 65%;
+            margin: auto;
+            margin-top: 30px;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* 🧊 GLASS CARDS */
+        .card {
+            background: rgba(255, 255, 255, 0.88);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255,255,255,0.4);
+            padding: 25px;
+            border-radius: 16px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+            margin-bottom: 20px;
+            transition: 0.3s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-4px);
+        }
+
+        h2 {
+            margin-top: 0;
+        }
+
+        textarea {
+            width: 100%;
+            height: 130px;
+            padding: 12px;
+            border-radius: 10px;
+            border: 1px solid #e5e7eb;
+            font-size: 15px;
+            outline: none;
+            resize: none;
+        }
+
+        textarea:focus {
+            border: 1px solid #2563eb;
+        }
+
+        button {
+            margin-top: 12px;
+            width: 100%;
+            padding: 12px;
+            background: #2563eb;
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 16px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: 0.3s;
+        }
+
+        button:hover {
+            background: #1d4ed8;
+            transform: scale(1.02);
+        }
+
+        /* BBC BUTTON */
+        .bbc-btn {
+            background: #10b981;
+        }
+
+        .bbc-btn:hover {
+            background: #059669;
+        }
+
+        /* BADGES */
+        .badge-real {
+            display: inline-block;
+            padding: 6px 12px;
+            background: #dcfce7;
+            color: #166534;
+            border-radius: 20px;
+            font-weight: 600;
+        }
+
+        .badge-fake {
+            display: inline-block;
+            padding: 6px 12px;
+            background: #fee2e2;
+            color: #991b1b;
+            border-radius: 20px;
+            font-weight: 600;
+        }
+
+        /* TABLE */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th, td {
+            text-align: left;
+            padding: 12px;
+            border-bottom: 1px solid #e5e7eb;
+            font-size: 14px;
+        }
+
+        th {
+            background: #f3f4f6;
+            font-weight: 600;
+        }
+
+        tr:hover {
+            background: #f9fafb;
+        }
+
+        /* RESULT BOX */
+        .result-box {
+            margin-top: 15px;
+            padding: 15px;
+            border: 1px solid #e5e7eb;
+            border-radius: 10px;
+            background: #fafafa;
+        }
+    </style>
+</head>
+
+<body>
+
+<!-- NAVBAR -->
+<div class="navbar">
+
+    <div class="logo-box">
+        <svg width="38" height="38" viewBox="0 0 38 38">
+            <rect width="38" height="38" rx="10" fill="#2563eb"/>
+            <path d="M10 26C12 18 26 18 28 26" stroke="white" stroke-width="2" stroke-linecap="round"/>
+            <circle cx="14" cy="16" r="2" fill="white"/>
+            <circle cx="24" cy="16" r="2" fill="white"/>
+        </svg>
+    </div>
+
+    <div class="title">Fake News Detection System</div>
+
+</div>
+
+<div class="container">
+
+    <!-- INPUT CARD -->
+    <div class="card">
+        <h2>Analyze News</h2>
+
+        <form method="POST">
+            <textarea name="news" placeholder="Enter news text here..."></textarea>
+
+            <button type="submit">Detect News</button>
+        </form>
+
+        <a href="/bbc">
+            <button type="button" class="bbc-btn">
+                Fetch Live BBC News
+            </button>
+        </a>
+
+        {% if prediction %}
+        <div class="result-box">
+
+            <h3>Result</h3>
+
+            {% if prediction == "REAL" %}
+                <span class="badge-real">✔ REAL NEWS</span>
+            {% else %}
+                <span class="badge-fake">✖ FAKE NEWS</span>
+            {% endif %}
+
+            <p><b>Language:</b> {{ language }}</p>
+            <p><b>Confidence:</b> {{ confidence }}%</p>
+
+        </div>
+        {% endif %}
+    </div>
+
+    <!-- HISTORY CARD -->
+    <div class="card">
+        <h2>Prediction History</h2>
+
+        <table>
+            <tr>
+                <th>News</th>
+                <th>Prediction</th>
+                <th>Confidence</th>
+                <th>Language</th>
+            </tr>
+
+            {% for item in history %}
+            <tr>
+                <td>{{ item.title }}</td>
+                <td>
+                    {% if item.prediction == "REAL" %}
+                        <span class="badge-real">REAL</span>
+                    {% else %}
+                        <span class="badge-fake">FAKE</span>
+                    {% endif %}
+                </td>
+                <td>{{ item.confidence }}%</td>
+                <td>{{ item.language }}</td>
+            </tr>
+            {% endfor %}
+        </table>
+    </div>
+
+</div>
+
+</body>
+</html>

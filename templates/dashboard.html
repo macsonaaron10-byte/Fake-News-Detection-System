@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Dashboard - Fake News Detection System</title>
+
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+    <style>
+        body {
+            margin: 0;
+            font-family: 'Inter', sans-serif;
+
+            /* 🌈 NEW MODERN BACKGROUND (ADDED ONLY) */
+            background: linear-gradient(135deg, #0f172a, #1e3a8a, #6366f1, #a5b4fc);
+            min-height: 100vh;
+            color: #111827;
+        }
+
+        /* NAVBAR (slightly upgraded transparency only) */
+        .navbar {
+            background: rgba(15, 23, 42, 0.85);
+            backdrop-filter: blur(10px);
+            color: white;
+            padding: 18px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .container {
+            width: 65%;
+            margin: auto;
+            margin-top: 30px;
+        }
+
+        /* CARD (UPGRADED ONLY VISUALS) */
+        .card {
+            background: rgba(255, 255, 255, 0.92);
+            backdrop-filter: blur(10px);
+            padding: 25px;
+            border-radius: 16px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.25);
+            margin-bottom: 20px;
+            transition: 0.3s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-3px);
+        }
+
+        h2 {
+            margin-top: 0;
+        }
+
+        textarea {
+            width: 100%;
+            height: 130px;
+            padding: 12px;
+            border-radius: 10px;
+            border: 1px solid #e5e7eb;
+            font-size: 15px;
+            outline: none;
+        }
+
+        textarea:focus {
+            border: 1px solid #2563eb;
+        }
+
+        button {
+            margin-top: 12px;
+            width: 100%;
+            padding: 12px;
+            background: linear-gradient(90deg, #2563eb, #4f46e5);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-size: 16px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: 0.3s;
+        }
+
+        button:hover {
+            transform: scale(1.02);
+        }
+
+        /* BBC BUTTON (UNCHANGED FUNCTIONALITY, ONLY STYLE BOOST) */
+        .bbc-btn {
+            background: linear-gradient(90deg, #10b981, #059669);
+        }
+
+        .bbc-btn:hover {
+            transform: scale(1.02);
+        }
+
+        /* RESULT BOX */
+        .result-box {
+            margin-top: 15px;
+            padding: 15px;
+            border-radius: 10px;
+            background: #f9fafb;
+            border-left: 5px solid #2563eb;
+        }
+
+        .real {
+            border-left: 5px solid #16a34a;
+        }
+
+        .fake {
+            border-left: 5px solid #dc2626;
+        }
+
+        /* TABLE */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th, td {
+            text-align: left;
+            padding: 12px;
+            border-bottom: 1px solid #e5e7eb;
+            font-size: 14px;
+        }
+
+        th {
+            background: #f3f4f6;
+        }
+
+        tr:hover {
+            background: #f9fafb;
+        }
+
+        .badge-real {
+            background: #dcfce7;
+            color: #166534;
+            padding: 5px 10px;
+            border-radius: 20px;
+            font-weight: 600;
+        }
+
+        .badge-fake {
+            background: #fee2e2;
+            color: #991b1b;
+            padding: 5px 10px;
+            border-radius: 20px;
+            font-weight: 600;
+        }
+
+        a {
+            color: white;
+            text-decoration: none;
+        }
+    </style>
+</head>
+
+<body>
+
+<!-- NAVBAR -->
+<div class="navbar">
+    <div>🧠 Fake News Detection System</div>
+    <div>User: {{ session['user'] }} | <a href="/logout">Logout</a></div>
+</div>
+
+<div class="container">
+
+    <!-- INPUT CARD -->
+    <div class="card">
+        <h2>Analyze News</h2>
+
+        <form method="POST">
+            <textarea name="news" placeholder="Paste your news article here..."></textarea>
+
+            <button type="submit">Detect News</button>
+        </form>
+
+        <!-- BBC BUTTON (UNCHANGED FUNCTIONALITY) -->
+        <a href="/bbc">
+            <button type="button" class="bbc-btn">
+                Fetch Live BBC News
+            </button>
+        </a>
+
+        {% if prediction %}
+
+        <div class="result-box {% if prediction == 'REAL' %}real{% else %}fake{% endif %}">
+            <h3>Result: {{ prediction }}</h3>
+            <p><b>Confidence:</b> {{ confidence }}%</p>
+            <p><b>Language:</b> {{ language }}</p>
+        </div>
+
+        {% endif %}
+    </div>
+
+    <!-- HISTORY TABLE -->
+    <div class="card">
+        <h2>Prediction History</h2>
+
+        <table>
+            <tr>
+                <th>News</th>
+                <th>Prediction</th>
+                <th>Confidence</th>
+                <th>Language</th>
+            </tr>
+
+            {% for item in history %}
+            <tr>
+                <td>{{ item.title }}</td>
+
+                <td>
+                    {% if item.prediction == "REAL" %}
+                        <span class="badge-real">REAL</span>
+                    {% else %}
+                        <span class="badge-fake">FAKE</span>
+                    {% endif %}
+                </td>
+
+                <td>{{ item.confidence }}%</td>
+                <td>{{ item.language }}</td>
+            </tr>
+            {% endfor %}
+        </table>
+
+    </div>
+
+</div>
+
+</body>
+</html>
